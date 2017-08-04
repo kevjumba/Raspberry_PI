@@ -30,7 +30,7 @@ def write_block(addr, registry, byte_string):
             while len(block)-first_write_len-index*8>=8:
                 temp_register = start + first_write_len + index*8
                 bus.write_i2c_block_data(addr, temp_register, block[first_write_len+index*8: first_write_len + index*8+8])
-                time.sleep(0.01)
+                time.sleep(0.04)
     #            print("writing block ")
     #            print map("{0:02X}".format, [int(i) for i in block[first_write_len+index*8: first_write_len + index*8 + 8]])
                 index = index+1
@@ -38,7 +38,7 @@ def write_block(addr, registry, byte_string):
             last_register = start + first_write_len + index*8
             if last_write_len>0:
                 bus.write_i2c_block_data(addr, last_register, block[first_write_len + index*8: first_write_len + index*8 + last_write_len])
-            print("Write to address:", i2c_addr, "at registry: ", registry, "successful")
+#            print("Write to address:", i2c_addr, "at registry: ", registry, "successful")
     #        print("writing block ")
     #        print map("{0:02X}".format, [int(i) for i in block[first_write_len + index*8: first_write_len + index*8 + last_write_len]])
         except Exception, e:

@@ -86,7 +86,7 @@ def exec_cmd(input_string):
             return_str = format_block(data)
             if(return_str == block):
                 write = 0 #don't write
-                return_str = "Already written"
+                return_str = "Unchanged"
         if(write):
             I2C_Write.write_block(addr, register_str, block)
             time.sleep(0.05)
@@ -94,9 +94,8 @@ def exec_cmd(input_string):
                 block = I2C_Read.read_block(addr, register_str, len(block)/2)
                 return_str = format_block(block)
             if(compare_rw):
-                return_str += "\nread and write are same" \
-                if (write_string == return_str)  else "\nread and write not same" \
-                "try writing password first"
+                return_str += "\nTrue" \
+                if (write_string == return_str)  else "False"
 
 
 #=======================================================================
