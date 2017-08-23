@@ -60,23 +60,20 @@ def exec_cmd(input_string):
         if(full_page_write_mode):
             #read 128
             size = len(write_string)
-            block = I2C_Read.read_block(addr, 0, size/2)
+            block = I2C_Read.read_block(addr, register_str, size/2)
             read_str = format_block(block)
             for i in range (0, size, 16):
                 if read_str[i:i+16]!= write_string[i:i+16]:
-                    I2C_Write.write_block(addr, i/2, write_string[i:i+16])
-                    time.sleep(0.01)
+                    I2C_Write.write_block(addr, int(register_str)+i/2, write_string[i:i+16])
+                    #print("writing to address", int(register_str)+i/2, "with block", write_string[i:i+16])
+                    time.sleep(0.05)
                     changed = 1
-            if(changed):
-                block = I2C_Read.read_block(addr, 0, size/2)
-                output_str = format_block(block)
-                if(output_str == write_string):
-                    print("True")
-                    
-                else:
-                    print("False")
-            else:
-                print("Unchanged")
+            
+            block = I2C_Read.read_block(addr, register_str, size/2)
+            output_str = format_block(block)
+            return_str+=output_str
+            if(output_str == write_string): return_str+="True"
+            else: return_str+="False"
             #compare and write 8 bytes at a time
             #if anything is changed, read back and compare with input
             write = 0
@@ -84,7 +81,7 @@ def exec_cmd(input_string):
         if(read_before_write):
             data = I2C_Read.read_block(addr, register_str, len(block)/2)
             return_str = format_block(data)
-            if(return_str == block):
+            if(return_str == write_string):
                 write = 0 #don't write
                 return_str = "Unchanged"
         if(write):
@@ -94,7 +91,7 @@ def exec_cmd(input_string):
                 block = I2C_Read.read_block(addr, register_str, len(block)/2)
                 return_str = format_block(block)
             if(compare_rw):
-                return_str += "\nTrue" \
+                return_str += "True" \
                 if (write_string == return_str)  else "False"
 
 
