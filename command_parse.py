@@ -9,6 +9,13 @@ def exec_cmd(input_string):
         program A0,0x5A=3231   write to page A0, address 0x5A for hex string 3231
                                  ?CC will be uphex_addrted as well
         program A2,0x00?128      read page A2,address 0x00 for 128 bytes
+        0x00??128 (if A0, is omitted, assume it is A0)
+        0x54=313233343536? (if a ? is at the end of write, then it means write, then read back.  There needs to be a 50ms wait after write.  This 50ms wait needs to be in a local database. Also related to this is the wait between each memory section change, it is also needs to be in a database)
+        0x54=313233343536?! (if a ?! is at the end of write, then write, read back then compare the read back string to the input string)
+        0x54=?313233343536 (if a ? is at the beginning of write string, then read first to see if the content is already the same as the write string.  Write only if there is a difference)
+        0x54=?313233343536? (read before write. If there is a write, read after write)
+        0x54=?313233343536?! (read before write. If there is a write, read after write, also compare if the write and read back is the same if there is a write)
+        0x54=#128bytes write 128 bytes 8 bytes at a time
     """
     hex_addr={'A0':0x50,'A2':0x51,'B0':0x58,'B2':0x59}
     return_str = ""
